@@ -50,6 +50,16 @@ def reverse_graph(graph):
             reversed_graph[neighbor].append(node)
     return reversed_graph
 
+def dfs_collect(graph, node, visited, component):
+    """
+    Perform a DFS and collect nodes in the current component.
+    """
+    visited.add(node)
+    component.append(node)
+    for neighbor in graph[node]:
+        if neighbor not in visited:
+            dfs_collect(graph, neighbor, visited, component)
+
 def dfs(graph, node, visited, stack=None):
     """
     Perform a DFS on the graph.
@@ -63,7 +73,7 @@ def dfs(graph, node, visited, stack=None):
 
 def kosaraju_scc(graph):
     """
-    Kosaraju's Algorithm to find the number of strongly connected components (SCCs).
+    Kosaraju's Algorithm to find the strongly connected components (SCCs).
     """
     # Perform DFS and track the finish time in a stack
     visited = set()
@@ -77,18 +87,19 @@ def kosaraju_scc(graph):
 
     # Perform DFS on the reversed graph in the order of decreasing finish time
     visited.clear()
-    scc_count = 0
+    sccs = []
     while stack:
         node = stack.pop()
         if node not in visited:
-            dfs(reversed_graph, node, visited)
-            scc_count += 1
+            component = []
+            dfs_collect(reversed_graph, node, visited, component)
+            sccs.append(component)
 
-    return scc_count
+    return sccs
 
 def weakly_connected_components(vertices, edges):
     """
-    Find the number of weakly connected components by treating the graph as undirected.
+    Find the weakly connected components by treating the graph as undirected.
     """
     # Build an undirected graph
     graph = defaultdict(list)
@@ -98,14 +109,15 @@ def weakly_connected_components(vertices, edges):
         graph[v].append(u)  # Treat as undirected
 
     visited = set()
-    wcc_count = 0
+    wccs = []
 
     for node in vertices:
         if node not in visited:
-            dfs(graph, node, visited)
-            wcc_count += 1
+            component = []
+            dfs_collect(graph, node, visited, component)
+            wccs.append(component)
 
-    return wcc_count
+    return wccs
 
 def main():
     # Directed graph adjacency matrix
@@ -123,21 +135,22 @@ def main():
     vertices = list(range(1, len(G) + 1))
     edges = matrix_to_edges(G)
 
-    # Input vertices and edges
+    # # Input vertices and edges
     # vertices = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     # edges = [(1, 2), (1, 4), (2, 6), (2, 3), (5, 4), (5, 9), (5, 5), (6, 4), (6, 3), (7, 3), (7, 5), (7, 6), (7, 8), (8, 3), (8, 9)]
 
     # Build the graph
     graph = build_graph(vertices, edges)
 
-    # Count SCCs
-    scc_count = kosaraju_scc(graph)
+    # Find SCCs
+    sccs = kosaraju_scc(graph)
+    print(f"Strongly Connected Components (SCCs): {sccs}")
+    print(f"Number of SCCs: {len(sccs)}")
 
-    # Count WCCs
-    wcc_count = weakly_connected_components(vertices, edges)
-
-    print(f"Number of Strongly Connected Components (SCCs): {scc_count}")
-    print(f"Number of Weakly Connected Components (WCCs): {wcc_count}")
+    # Find WCCs
+    wccs = weakly_connected_components(vertices, edges)
+    print(f"Weakly Connected Components (WCCs): {wccs}")
+    print(f"Number of WCCs: {len(wccs)}")
 
 if __name__ == "__main__":
     main()
