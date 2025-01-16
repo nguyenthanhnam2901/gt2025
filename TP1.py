@@ -49,7 +49,7 @@ def build_graph(vertices, edges):
         graph[v].append(u)  # undirected graph 
     return graph
 
-def test_path_existence():
+def main():
     vertices = [1, 2, 3, 4, 5, 6, 7]
     edges = [(1, 2), (2, 5), (3, 6), (4, 6), (4, 7), (6, 7)]
     graph = build_graph(vertices, edges)
@@ -61,4 +61,4 @@ def test_path_existence():
     print(path_existence(graph, 5, 4))  # False
 
 if __name__ == "__main__":
-    test_path_existence()
+    main()
