@@ -55,7 +55,7 @@ def inorder_traversal(node):
     return inorder_traversal(node.left) + [node.value] + inorder_traversal(node.right)
 
 # Driver code
-if __name__ == '__main__':
+def main():
     vertices = [1, 2, 3, 4, 5, 6, 7, 8]
     edges = [(1, 2), (1, 3), (2, 5), (2, 6), (3, 4), (4, 8), (5, 7)]
 
@@ -82,3 +82,6 @@ if __name__ == '__main__':
             break
         except ValueError:
             print("Please enter a valid integer.")
+
+if __name__ == '__main__':
+    main()
